@@ -1,0 +1,19 @@
+{% load staticfiles %}
+{% include 'global_include.html' %}
+
+<link href="{% static '/css/signin.css' %}" rel="stylesheet" type="text/css">
+
+<form class="form-signin" role="form" action={% url 'authentication:register' %} method="post">{% csrf_token %}
+    {% if error %}
+        <p><h3>{{ error }}</h3></p>
+    {% endif %}
+
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            <input type="{{ field.field.widget.input_type }}" id="{{ field.auto_id }}" class="form-control" placeholder="{{ field.label }}" name="{{ field.html_name }}" required="{{ field.field.widget.is_required }}" hidden="{{ field.field.widget.is_hidden }}"/>
+        </div>
+    {% endfor %}
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+</form>

@@ -1,0 +1,10 @@
+{% if user.is_authenticated %}
+    <p>
+        {% if  user.userprofile.image_thumb %}
+            <img src="{{ user.userprofile.image_thumb.url }}" alt="" />
+        {% endif %}
+        Welcome, <a href="{% url 'authentication:profile' %}">{{ user.username }}</a>. Thanks for logging in. <a href="{% url 'authentication:logout' %}">Logout</a>
+    </p>
+{% else %}
+    <p>Welcome, new user. Please <a href={% url 'authentication:login' %}>log in.</a></p>
+{% endif %}
