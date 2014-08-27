@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
+import tagging
 
 
 class Artist(models.Model):
@@ -22,6 +23,7 @@ class Album(models.Model):
         return self.name
 
 
+#рудимент для работы облака тегов и лайков
 class Tag(models.Model):
     name = models.CharField(unique=True, max_length=100)
     popularity = models.IntegerField(default=1)
@@ -36,10 +38,13 @@ class Song(models.Model):
     name = models.CharField(max_length=100)
     file = models.FileField(upload_to='audio/', null=True)
     user = models.ForeignKey(User)
-    tags = models.ManyToManyField(Tag)
+    artist = models.ForeignKey(Artist)
+    album = models.ForeignKey(Album)
 
     def __unicode__(self):
         return self.name
+
+tagging.register(Song)
 
 
 class Playlist(models.Model):
