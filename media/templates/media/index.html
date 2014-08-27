@@ -1,46 +1,60 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
-{% include 'global_include.html' %}
+
+<link href="{% static '/css/custom_styles.css' %}" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="{% static 'media/my.js' %}"></script>
-{% include 'authentication/user_header.html' %}
 
-{% for tag in tags %}
-    <p>
-        <div>
+{% block title %}
+    Index page
+{% endblock %}
 
-            <div id="like_count_{{ tag.id }}" style="display:inline-block"> </div>
-            <button type="button" class="btn btn-default btn-sm likes" id="button_likes_{{ tag.id }}" data-tag_id="{{ tag.id }}">
-                {{ tag.name }}
-                <span class="glyphicon glyphicon-heart"></span>
-                {{tag.popularity }}
-            </button>
-        </div>
-    </p>
-{% endfor %}
+{% block other %}
 
-
-<ul class="nav nav-list">
-    <li class="nav-header">Find</li>
-    <form>
-        <label></label>
-        <li>
-            <input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" />
-        </li>
-    </form>
-</ul>
-
-{% if song_list %}
-    <div id="songs">
-        {% include 'media/song_list.html' with song_list=song_list %}
-    </div>
-{% endif %}
-
-
-<dl class="sidebar-block sidebar-tags">
-<dt>
-<dd class="tags">
     {% for tag in tags %}
-        <a href="tag/{{ tag.id }}" title="{{ tag.popularity }} раз" rel="tag" style="font-size:1em;" target="_self">{{ tag.name }}</a>
-        <span class="comma">,</span>
+        <p>
+            <div>
+
+                <div id="like_count_{{ tag.id }}" style="display:inline-block"> </div>
+                <button type="button" class="btn btn-default btn-sm likes" id="button_likes_{{ tag.id }}" data-tag_id="{{ tag.id }}">
+                    {{ tag.name }}
+                    <span class="glyphicon glyphicon-heart"></span>
+                    {{tag.popularity }}
+                </button>
+            </div>
+        </p>
     {% endfor %}
-</dd>
-</dl>
+
+
+    {{ tags_form.as_table}}
+
+
+    <ul class="nav nav-list">
+        <li class="nav-header">Find</li>
+        <form>
+            <label></label>
+            <li>
+                <input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" />
+            </li>
+        </form>
+    </ul>
+
+    {% if song_list %}
+        <div id="songs">
+            {% include 'media/song_list.html' with song_list=song_list %}
+        </div>
+    {% endif %}
+
+
+    {% block tags_cloud %}
+        <dl class="sidebar-block sidebar-tags">
+        <dt>
+        <dd class="tags">
+            {% for tag in tags %}
+                <a href="" title="" rel="tag" style="font-size:1em;" target="_self">{{ tag.name }}</a>
+                <span class="comma">,</span>
+            {% endfor %}
+        </dd>
+        </dl>
+    {% endblock %}
+
+{% endblock %}

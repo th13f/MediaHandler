@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from media.models import Tag, Song
+from tagging.models import Tag
+from media.forms import TagsForm
+from media.models import Song
 
 
 def like_tag_view(request):
@@ -38,7 +40,8 @@ def get_song_list(max_results=0, starts_with=''):
 def index_view(request):
     return render(request, 'media/index.html', {
         'tags': Tag.objects.all()[:20],
-        'song_list': get_song_list(8, '')
+        'song_list': get_song_list(8, ''),
+        'tags_form': TagsForm()
     })
 
 
