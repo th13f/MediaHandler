@@ -1,18 +1,25 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
-{% include 'global_include.html' %}
 
-<link href="{% static '/css/signin.css' %}" rel="stylesheet" type="text/css">
 
-<form class="form-signin" role="form" action={% url 'authentication:login' %} method="post">{% csrf_token %}
-    <h2 class="form-signin-heading">Please sign in</h2>
+{% block additional_head %}
+    <link href="{% static '/css/signin.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
-    {% for field in form %}
-        <div class="fieldWrapper">
-            {{ field.errors }}
-            <input type="{{ field.field.widget.input_type }}" id="{{ field.auto_id }}" class="form-control" placeholder="{{ field.label }}" name="{{ field.html_name }}" required="{{ field.field.widget.is_required }}" hidden="{{ field.field.widget.is_hidden }}"/>
-        </div>
-    {% endfor %}
+{% block title %}Sign in{% endblock %}
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p>Doesn't have account? <a href="{% url 'authentication:register' %}"> Register!</a></p>
-</form>
+{% block content %}
+    <form class="form-signin" role="form" action="" method="post">{% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                <input type="{{ field.field.widget.input_type }}" id="{{ field.auto_id }}" class="form-control" placeholder="{{ field.label }}" name="{{ field.html_name }}" required="{{ field.field.widget.is_required }}" hidden="{{ field.field.widget.is_hidden }}"/>
+            </div>
+        {% endfor %}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p>Doesn't have account? <a href="{% url 'authentication:register' %}"> Register!</a></p>
+    </form>
+{% endblock %}

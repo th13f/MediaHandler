@@ -16,4 +16,11 @@ $(document).ready(function() {
                 $('#songs').html(data);
             });
         });
+
+        $('#artist_selector').on("select2-selecting", function(e) {
+            var artist = e.val;
+            var albums = jQuery.getJSON('albums.json',{artist:artist});
+            alert("selected: "+JSON.stringify(albums));
+        })
+
 });

@@ -1,15 +1,41 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-<link href="{% static '/css/custom_styles.css' %}" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="{% static 'media/my.js' %}"></script>
+
+{% block additional_head %}
+    <link href="{% static '/css/custom_styles.css' %}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{% static 'media/my.js' %}"></script>
+    <link href="{% static '/css/select2.css' %}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{% static '/js/select2.min.js' %}"></script>
+    <script>
+        $(document).ready(function() { $("#artist_selector").select2(); });
+        $(document).ready(function() { $("#album_selector").select2(); });
+    </script>
+{% endblock %}
+
 
 {% block title %}
     Index page
 {% endblock %}
 
-{% block other %}
 
+{% block header %}
+    {% include 'authentication/user_header.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#uploadSong">
+      Upload song
+    </button>
+
+    <!-- Modal -->
+    {% include 'media/upload_song.html' %}
+{% endblock %}
+
+
+{% block other %}
     {% for tag in tags %}
         <p>
             <div>
@@ -24,9 +50,7 @@
         </p>
     {% endfor %}
 
-
     {{ tags_form.as_table}}
-
 
     <ul class="nav nav-list">
         <li class="nav-header">Find</li>
@@ -43,18 +67,11 @@
             {% include 'media/song_list.html' with song_list=song_list %}
         </div>
     {% endif %}
+{% endblock %}
 
 
-    {% block tags_cloud %}
-        <dl class="sidebar-block sidebar-tags">
-        <dt>
-        <dd class="tags">
-            {% for tag in tags %}
-                <a href="" title="" rel="tag" style="font-size:1em;" target="_self">{{ tag.name }}</a>
-                <span class="comma">,</span>
-            {% endfor %}
-        </dd>
-        </dl>
-    {% endblock %}
-
+{% block right %}
+    <div class="pull-right" style="width: 300px;">
+        {% include 'tags_cloud.html' %}
+    </div>
 {% endblock %}

@@ -1,8 +1,18 @@
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+import json
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from tagging.models import Tag
+from django.template import RequestContext
+from tagging.utils import LOGARITHMIC
+from tagging.models import Tag, TagManager
 from media.forms import TagsForm
-from media.models import Song
+from media.models import Song, Artist
+
+
+def processor(request):
+    return {
+        'cloud': Tag.objects.cloud_for_model(Song, steps=8, distribution=LOGARITHMIC),
+    }
 
 
 def like_tag_view(request):
@@ -38,18 +48,36 @@ def get_song_list(max_results=0, starts_with=''):
 
 
 def index_view(request):
-    return render(request, 'media/index.html', {
-        'tags': Tag.objects.all()[:20],
-        'song_list': get_song_list(8, ''),
-        'tags_form': TagsForm()
-    })
+    return render(
+        request, 'media/index.html',
+        {
+            'tags': Tag.objects.all()[:20],
+            'song_list': get_song_list(8, ''),
+            'tags_form': TagsForm(),
+            'artists': Artist.objects.all()[:30],
+        },
+        context_instance=RequestContext(request, processors=[processor])
+    )
+
+
+def albums_by_artist(request):
+    albums = {}
+    artist_id = request.GET['artist']
+    for album in Artist.objects.get(pk=artist_id).album_set.all():
+        albums[album.id]=album.name
+
+    return HttpResponse(json.dumps(albums), content_type="application/json")
+
+
+def upload(request):
+    return HttpResponseRedirect(reverse('media:index'))
 
 
 def suggest_song_view(request):
-        starts_with = ''
-        if request.method == 'GET':
-            starts_with = request.GET['suggestion']
+    starts_with = ''
+    if request.method == 'GET':
+        starts_with = request.GET['suggestion']
 
-        song_list = get_song_list(8, starts_with)
+    song_list = get_song_list(8, starts_with)
 
-        return render(request, 'media/song_list.html', {'song_list': song_list })
+    return render(request, 'media/song_list.html', {'song_list': song_list})
